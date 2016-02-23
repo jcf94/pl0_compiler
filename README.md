@@ -4,6 +4,8 @@ A Compiler for PL/0 Language written by C++.
 
 PL/0 is a subset of Pascal.
 
+[Update log](http://jcf94.com/2016/02/22/2016-02-22-pl0change/)
+
 # Usage
 
 Put PL/0 code in `***.pl0`.
