@@ -1,6 +1,17 @@
 # PL/0_compiler
 
-A Compiler for PL/0 Language. PL/0 is a subset of Pascal.
+A Compiler for PL/0 Language written by C++.
+
+PL/0 is a subset of Pascal.
+
+# Usage
+
+Put PL/0 code in `***.pl0`.
+
+```bash
+$ make
+$ ./main
+```
 
 # 说明
 
