@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        11             // no. of reserved words
+#define norw        12             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -48,6 +48,7 @@ PROG	: PL/0_Define_h
 #define constsym    0x8000000
 #define varsym      0x10000000
 #define procsym     0x20000000
+#define elsesym     0x40000000
 
 #define stacksize   50000
 
@@ -163,3 +164,9 @@ extern long s[stacksize];        // Êý¾ÝÕ»
 
 long base(long, long);
 void interpret();
+
+//---------------------------------
+//-------------Initialization
+//---------------------------------
+
+void globalinit();

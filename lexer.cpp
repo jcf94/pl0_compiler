@@ -8,6 +8,7 @@ INST    : 词法分析
 #include <cstdio>
 #include <cctype>
 #include <cstring>
+#include <cstdlib>
 
 #include "def.h"
 
@@ -20,7 +21,7 @@ void getch()
             printf("************************************\n");
             printf("      program incomplete\n");
             printf("************************************\n");
-            //exit(1);
+            exit(1);
         }
         
         ll = 0; cc = 0;
@@ -67,7 +68,7 @@ void getsym()
             getch();
         } while(isalpha(ch) || isdigit(ch));
 
-        if(k >= kk)
+        if(k >= kk)              // 行末补上空格，以便下面的对比
         {
             kk = k;
         }
@@ -81,7 +82,7 @@ void getsym()
 
         strcpy(id, a); i = 0; j = norw - 1;
 
-        do
+        do                       // 在保留字表中二分查找确定保留字
         {
             k = (i+j)/2;
 

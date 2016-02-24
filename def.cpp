@@ -5,6 +5,8 @@ PROG	: PL/0_Define
 INST    : 全局变量定义
 ************************************************ */
 
+#include <cstring>
+
 #include "def.h"
 
 //---------------------------------
@@ -97,3 +99,65 @@ unsigned long facbegsys;  // factor开始符号集合
 //---------------------------------
 
 long s[stacksize];        // 数据栈
+
+//---------------------------------
+//-------------Initialization
+//---------------------------------
+
+void globalinit()
+{
+	for(int i=0; i<256; i++)
+    {
+        ssym[i]=nul;
+    }
+    
+    strcpy(word[0],  "begin     ");
+    strcpy(word[1],  "call      ");
+    strcpy(word[2],  "const     ");
+    strcpy(word[3],  "do        ");
+    strcpy(word[4],  "end       ");
+    strcpy(word[5],  "if        ");
+    strcpy(word[6],  "odd       ");
+    strcpy(word[7],  "procedure ");
+    strcpy(word[8],  "then      ");
+    strcpy(word[9],  "var       ");
+    strcpy(word[10], "while     ");
+    strcpy(word[11], "else      ");
+    
+    wsym[0]=beginsym;
+    wsym[1]=callsym;
+    wsym[2]=constsym;
+    wsym[3]=dosym;
+    wsym[4]=endsym;
+    wsym[5]=ifsym;
+    wsym[6]=oddsym;
+    wsym[7]=procsym;
+    wsym[8]=thensym;
+    wsym[9]=varsym;
+    wsym[10]=whilesym;
+    wsym[11]=elsesym;
+
+    ssym['+']=plus;
+    ssym['-']=minus;
+    ssym['*']=times;
+    ssym['/']=slash;
+    ssym['(']=lparen;
+    ssym[')']=rparen;
+    ssym['=']=eql;
+    ssym[',']=comma;
+    ssym['.']=period;
+    ssym[';']=semicolon;
+  
+    strcpy(mnemonic[lit],"LIT");
+    strcpy(mnemonic[opr],"OPR");
+    strcpy(mnemonic[lod],"LOD");
+    strcpy(mnemonic[sto],"STO");
+    strcpy(mnemonic[cal],"CAL");
+    strcpy(mnemonic[Int],"INT");
+    strcpy(mnemonic[jmp],"JMP");
+    strcpy(mnemonic[jpc],"JPC");
+  
+    declbegsys=constsym|varsym|procsym;
+    statbegsys=beginsym|callsym|ifsym|whilesym;
+    facbegsys=ident|number|lparen;
+}

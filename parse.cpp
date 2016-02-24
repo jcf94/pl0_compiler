@@ -171,7 +171,7 @@ void statement(unsigned long fsys)
 {
     long i,cx1,cx2;
 
-    if(sym==ident)
+    if(sym==ident)               // 以标识符开始，则为赋值语句
     {
         i=position(id);
         if(i==0)
@@ -201,7 +201,7 @@ void statement(unsigned long fsys)
             gen(sto,lev-table[i].level,table[i].addr);
         }
     }
-    else if(sym==callsym)
+    else if(sym==callsym)        // 调用语句
     {
         getsym();
         if(sym!=ident)

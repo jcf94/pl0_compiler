@@ -8,7 +8,7 @@ procedure multiply;
         while b>0 do
             begin
                 if odd b then z:=z+a;
-                a:=2*a; b:=b/2;
+                a:=2*a; b:=b/2
             end
     end;
 /* aaa 
@@ -22,5 +22,5 @@ test *
 */
 begin
     x:=m; y:=n;
-    call multiply;
+    call multiply
 end.
