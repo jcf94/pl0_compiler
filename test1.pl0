@@ -22,5 +22,7 @@ test *
 */
 begin
     x:=m; y:=n;
-    call multiply
+    call multiply;
+    if 1=2 then x:=x+1;
+    else x:=x-1;
 end.

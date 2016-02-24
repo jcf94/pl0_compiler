@@ -151,8 +151,8 @@ void block(unsigned long);
 void constdeclaration();
 void vardeclaration();
 void statement(unsigned long);
-void condition(unsigned long);
 void expression(unsigned long);
+void simpexpression(unsigned long);
 void term(unsigned long);
 void factor(unsigned long);
 

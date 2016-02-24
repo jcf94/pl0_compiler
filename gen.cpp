@@ -6,6 +6,7 @@ INST    : ´úÂëÉú³É
 ************************************************ */
 
 #include <cstdio>
+#include <cstdlib>
 
 #include "def.h"
 
@@ -14,7 +15,7 @@ void gen(enum fct x, long y, long z)
     if(cx > cxmax)
     {
         printf("program too long\n");
-        //exit(1);
+        exit(1);
     }
     
     code[cx].f = x; code[cx].l = y; code[cx].a = z;

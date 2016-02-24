@@ -194,7 +194,7 @@ void statement(unsigned long fsys)
             error(13);
         }
         
-        expression(fsys);
+        simpexpression(fsys);
         
         if(i!=0)
         {
@@ -227,9 +227,9 @@ void statement(unsigned long fsys)
             getsym();
         }
     }
-    else if(sym==ifsym)
+    else if(sym==ifsym)          // ifÓï¾ä
     {
-        getsym(); condition(fsys|thensym|dosym);
+        getsym(); expression(fsys|thensym|dosym);
     
         if(sym==thensym)
         {
@@ -241,9 +241,16 @@ void statement(unsigned long fsys)
         }
         cx1=cx;	gen(jpc,0,0);
         statement(fsys);
-        code[cx1].a=cx;	
+        code[cx1].a=cx;
+
+        if (sym==elsesym)        // else×Ó¾ä
+        {
+            getsym();
+
+            statement(fsys);
+        }
     }
-    else if(sym==beginsym)
+    else if(sym==beginsym)       // beginÓï¾ä
     {
         getsym(); statement(fsys|semicolon|endsym);
         while(sym==semicolon||(sym&statbegsys))
@@ -270,7 +277,7 @@ void statement(unsigned long fsys)
     else if(sym==whilesym)
     {
         cx1=cx; getsym();
-        condition(fsys|dosym);
+        expression(fsys|dosym);
         cx2=cx;	gen(jpc,0,0);
         if(sym==dosym)
         {
@@ -289,18 +296,18 @@ void statement(unsigned long fsys)
     test(fsys,0,19);
 }
 
-void condition(unsigned long fsys)
+void expression(unsigned long fsys)
 {
     unsigned long relop;
 
     if(sym==oddsym)
     {
-        getsym(); expression(fsys);
+        getsym(); simpexpression(fsys);
         gen(opr, 0, 6);
     }
     else
     {
-        expression(fsys|eql|neq|lss|gtr|leq|geq);
+        simpexpression(fsys|eql|neq|lss|gtr|leq|geq);
 
         if(!(sym&(eql|neq|lss|gtr|leq|geq)))
         {
@@ -310,7 +317,7 @@ void condition(unsigned long fsys)
         {
             relop=sym; getsym();
 
-            expression(fsys);
+            simpexpression(fsys);
             
             switch(relop)
             {
@@ -342,7 +349,7 @@ void condition(unsigned long fsys)
     }
 }
 
-void expression(unsigned long fsys)
+void simpexpression(unsigned long fsys)
 {
     unsigned long addop;
 
@@ -450,7 +457,7 @@ void factor(unsigned long fsys)
         else if(sym == lparen)
         {
             getsym();
-            expression(rparen|fsys);
+            simpexpression(rparen|fsys);
         
             if(sym==rparen)
             {
