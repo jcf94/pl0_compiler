@@ -22,13 +22,13 @@ void block(unsigned long fsys)
     {
         error(32);
     }
-    
+
     do
     {
         if(sym==constsym)
         {
             getsym();
-        
+
             do
             {
                 constdeclaration();
@@ -36,7 +36,7 @@ void block(unsigned long fsys)
                 {
                     getsym(); constdeclaration();
                 }
-                
+
                 if(sym==semicolon)
                 {
                     getsym();
@@ -58,7 +58,7 @@ void block(unsigned long fsys)
                 {
                     getsym(); vardeclaration();
                 }
-                
+
                 if(sym==semicolon)
                 {
                     getsym();
@@ -81,7 +81,7 @@ void block(unsigned long fsys)
             {
                 error(4);
             }
-            
+
             if(sym==semicolon)
             {
                 getsym();
@@ -90,11 +90,11 @@ void block(unsigned long fsys)
             {
                 error(5);
             }
-            
+
             lev=lev+1; tx1=tx; dx1=dx;
             block(fsys|semicolon);
             lev=lev-1; tx=tx1; dx=dx1;
-            
+
             if(sym==semicolon)
             {
                 getsym();
@@ -105,10 +105,10 @@ void block(unsigned long fsys)
                 error(5);
             }
         }
-        
+
         test(statbegsys|ident,declbegsys,7);
     } while(sym&declbegsys);
-    
+
     code[table[tx0].addr].a=cx;
     table[tx0].addr=cx;     // start addr of code
     cx0=cx; gen(Int,0,dx);
@@ -123,16 +123,16 @@ void constdeclaration()
     if(sym == ident)
     {
         getsym();
-    
+
         if(sym == eql || sym == becomes)
         {
             if(sym == becomes)
             {
                 error(1);
             }
-            
+
             getsym();
-            
+
             if(sym == number)
             {
                 enter(constant);
@@ -158,7 +158,7 @@ void vardeclaration()
 {
     if(sym == ident)
     {
-        enter(variable); 
+        enter(variable);
         getsym();
     }
     else
@@ -184,7 +184,7 @@ void statement(unsigned long fsys)
         }
 
         getsym();
-        
+
         if(sym==becomes)
         {
             getsym();
@@ -193,9 +193,9 @@ void statement(unsigned long fsys)
         {
             error(13);
         }
-        
+
         simpexpression(fsys);
-        
+
         if(i!=0)
         {
             gen(sto,lev-table[i].level,table[i].addr);
@@ -223,14 +223,15 @@ void statement(unsigned long fsys)
             {
                 error(15);
             }
-            
+
             getsym();
         }
     }
     else if(sym==ifsym)          // if语句
     {
-        getsym(); expression(fsys|thensym|dosym);
-    
+        getsym();
+        expression(fsys|thensym|dosym);
+
         if(sym==thensym)
         {
             getsym();
@@ -239,9 +240,9 @@ void statement(unsigned long fsys)
         {
             error(16);
         }
-        cx1=cx;	gen(jpc,0,0);
-        statement(fsys);
-        code[cx1].a=cx;
+        cx1=cx;	gen(jpc,0,0);    // 记录下跳转代码的位置，此时跳转地址是0
+        statement(fsys|elsesym); // 紧接着可能是else
+        code[cx1].a=cx;          // 把跳转地址加上
 
         if (sym==elsesym)        // else子句
         {
@@ -287,10 +288,14 @@ void statement(unsigned long fsys)
         {
             error(18);
         }
-        
+
         statement(fsys); gen(jmp,0,cx1);
-        
+
         code[cx2].a=cx;
+    }
+    else if(sym==elsesym)
+    {
+        test(fsys,0,33);
     }
 
     test(fsys,0,19);
@@ -318,29 +323,29 @@ void expression(unsigned long fsys)
             relop=sym; getsym();
 
             simpexpression(fsys);
-            
+
             switch(relop)
             {
                 case eql:
                     gen(opr, 0, 8);
                     break;
-            
+
                 case neq:
                     gen(opr, 0, 9);
                     break;
-            
+
                 case lss:
                     gen(opr, 0, 10);
                     break;
-            
+
                 case geq:
                     gen(opr, 0, 11);
                     break;
-            
+
                 case gtr:
                     gen(opr, 0, 12);
                     break;
-            
+
                 case leq:
                     gen(opr, 0, 13);
                     break;
@@ -356,9 +361,9 @@ void simpexpression(unsigned long fsys)
     if(sym==plus || sym==minus)
     {
         addop=sym; getsym();
-       
+
         term(fsys|plus|minus);
-       
+
         if(addop==minus)
         {
             gen(opr,0,1);
@@ -368,13 +373,13 @@ void simpexpression(unsigned long fsys)
     {
         term(fsys|plus|minus);
     }
-    
+
     while(sym==plus || sym==minus)
     {
         addop=sym; getsym();
-    
+
         term(fsys|plus|minus);
-    
+
         if(addop==plus)
         {
             gen(opr,0,2);
@@ -395,9 +400,9 @@ void term(unsigned long fsys)
     while(sym==times || sym==slash)
     {
         mulop = sym; getsym();
-    
+
         factor(fsys|times|slash);
-        
+
         if(mulop == times)
         {
             gen(opr,0,4);
@@ -419,7 +424,7 @@ void factor(unsigned long fsys)
         if(sym == ident)
         {
             i = position(id);
-            
+
             if(i==0)
             {
                 error(11);
@@ -450,7 +455,7 @@ void factor(unsigned long fsys)
             {
                 error(31); num=0;
             }
-            
+
             gen(lit,0,num);
             getsym();
         }
@@ -458,7 +463,7 @@ void factor(unsigned long fsys)
         {
             getsym();
             simpexpression(rparen|fsys);
-        
+
             if(sym==rparen)
             {
                 getsym();

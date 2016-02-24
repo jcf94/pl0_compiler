@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        12             // no. of reserved words
+#define norw        13             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -49,6 +49,7 @@ PROG	: PL/0_Define_h
 #define varsym      0x10000000
 #define procsym     0x20000000
 #define elsesym     0x40000000
+#define exitsym     0x80000000
 
 #define stacksize   50000
 
@@ -56,7 +57,7 @@ PROG	: PL/0_Define_h
 //-------------Error
 //---------------------------------
 
-extern char* err_msg[33];        // 错误信息表
+extern char* err_msg[34];        // 错误信息表
 extern long err;                 // 错误计数
 
 void error(long);                // 返回错误信息

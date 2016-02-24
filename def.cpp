@@ -13,7 +13,7 @@ INST    : 全局变量定义
 //-------------Error
 //---------------------------------
 
-char* err_msg[33] =        // 错误信息表
+char* err_msg[34] =        // 错误信息表
 {
 /*  0 */    "",
 /*  1 */    "Found ':=' when expecting '='.",
@@ -47,7 +47,8 @@ char* err_msg[33] =        // 错误信息表
 /* 29 */    "",
 /* 30 */    "",
 /* 31 */    "The number is too great.",
-/* 32 */    "There are too many levels."
+/* 32 */    "There are too many levels.",
+/* 33 */    "';' expected, but 'ELSE' found."
 };
 long err;                 // 错误计数
 
@@ -115,27 +116,29 @@ void globalinit()
     strcpy(word[1],  "call      ");
     strcpy(word[2],  "const     ");
     strcpy(word[3],  "do        ");
-    strcpy(word[4],  "end       ");
-    strcpy(word[5],  "if        ");
-    strcpy(word[6],  "odd       ");
-    strcpy(word[7],  "procedure ");
-    strcpy(word[8],  "then      ");
-    strcpy(word[9],  "var       ");
-    strcpy(word[10], "while     ");
-    strcpy(word[11], "else      ");
+    strcpy(word[4],  "else      ");
+    strcpy(word[5],  "end       ");
+    strcpy(word[6],  "exit      ");
+    strcpy(word[7],  "if        ");
+    strcpy(word[8],  "odd       ");
+    strcpy(word[9],  "procedure ");
+    strcpy(word[10], "then      ");
+    strcpy(word[11], "var       ");
+    strcpy(word[12], "while     ");
     
     wsym[0]=beginsym;
     wsym[1]=callsym;
     wsym[2]=constsym;
     wsym[3]=dosym;
-    wsym[4]=endsym;
-    wsym[5]=ifsym;
-    wsym[6]=oddsym;
-    wsym[7]=procsym;
-    wsym[8]=thensym;
-    wsym[9]=varsym;
-    wsym[10]=whilesym;
-    wsym[11]=elsesym;
+    wsym[4]=elsesym;
+    wsym[5]=endsym;
+    wsym[6]=exitsym;
+    wsym[7]=ifsym;
+    wsym[8]=oddsym;
+    wsym[9]=procsym;
+    wsym[10]=thensym;
+    wsym[11]=varsym;
+    wsym[12]=whilesym;
 
     ssym['+']=plus;
     ssym['-']=minus;

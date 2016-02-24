@@ -2,7 +2,7 @@
 MYID    : Chen Fan
 LANG    : G++
 PROG    : PL/0_Main
-INST    : PL/0зЉЦиѓСеЩ®дЄїз®ЛеЇП
+INST    : PL/0±а“л∆ч÷ч≥ћ–т
 ************************************************ */
 
 #include <cstdlib>
