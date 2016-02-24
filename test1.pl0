@@ -1,5 +1,6 @@
 const m=7, n=85;
 var x,y,z,q,r;
+// test
 procedure multiply;
     var a,b;
     begin
@@ -10,6 +11,15 @@ procedure multiply;
                 a:=2*a; b:=b/2;
             end
     end;
+/* aaa 
+
+test *
+
+//
+
+/*
+
+*/
 begin
     x:=m; y:=n;
     call multiply;

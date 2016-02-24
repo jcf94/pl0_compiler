@@ -53,7 +53,7 @@ void getsym()
         getch();
     }
 
-    if(isalpha(ch)) 	// identified or reserved
+    if (isalpha(ch))             // token首位是字母
     {
         k = 0;
 
@@ -105,7 +105,7 @@ void getsym()
             sym = ident;
         }
     }
-    else if(isdigit(ch)) // number
+    else if (isdigit(ch))        // token首位是数字
     {
         k = 0; num = 0; sym = number;
         do
@@ -120,7 +120,7 @@ void getsym()
             error(31);
         }
     }
-    else if(ch == ':')
+    else if (ch == ':')          // token首位是“:”
     {
         getch();
         
@@ -133,7 +133,7 @@ void getsym()
             sym = nul;
         }
     }
-    else if(ch == '<')
+    else if (ch == '<')          // token首位是“<”
     {
         getch();
     
@@ -150,7 +150,7 @@ void getsym()
             sym = lss;
         }
     }
-    else if(ch == '>')
+    else if (ch == '>')          // token首位是“>”
     {
         getch();
         
@@ -162,6 +162,35 @@ void getsym()
         {
             sym=gtr;
         }
+    }
+    else if (ch == '/')          // token首位是“/”，处理注释
+    {
+        getch();
+
+        if (ch == '/')
+        {
+            long l1=ll;
+            getch();
+            while (l1==ll) getch();
+
+            getsym();
+        } else if (ch == '*')
+        {
+            getch();
+            bool doit=true;
+            while(doit)
+            {
+                while(ch != '*') getch();
+                getch();
+                if (ch == '/')
+                {
+                    doit=false;
+                    getch();
+                }
+            }
+
+            getsym();
+        } else sym = ssym[(unsigned char)'/'];
     }
     else
     {

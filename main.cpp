@@ -69,11 +69,11 @@ int main()
     facbegsys=ident|number|lparen;
 
     printf("please input source program file name: ");
-    scanf("%s",infilename);
+    //scanf("%s",infilename);
     printf("\n");
   
-    if((infile=fopen(infilename,"r"))==NULL)
-    //if((infile=fopen("test1.pl0","r"))==NULL)
+    //if((infile=fopen(infilename,"r"))==NULL)
+    if((infile=fopen("test1.pl0","r"))==NULL)
     {
         printf("File %s can't be opened.\n", infilename);
         exit(1);
