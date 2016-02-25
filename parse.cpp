@@ -275,11 +275,16 @@ void statement(unsigned long fsys)
             error(17);
         }
     }
-    else if(sym==whilesym)
+    else if(sym==whilesym)       // while语句
     {
         cx1=cx; getsym();
         expression(fsys|dosym);
-        cx2=cx;	gen(jpc,0,0);
+
+        cx2=elx;                 // 记录下当前层开始的elx
+        exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
+        elx++;
+        //cx2=cx;
+        gen(jpc,0,0);
         if(sym==dosym)
         {
             getsym();
@@ -289,13 +294,29 @@ void statement(unsigned long fsys)
             error(18);
         }
 
-        statement(fsys); gen(jmp,0,cx1);
+        statement(fsys|exitsym);
+        gen(jmp,0,cx1);
 
-        code[cx2].a=cx;
+        //code[cx2].a=cx;
+        while(elx>cx2)           // 将exitlist中记录下的跳转语句的地址补充完整
+        {
+            elx--;
+            code[exitlist[elx]].a=cx;
+        }
     }
-    else if(sym==elsesym)
+    else if(sym==elsesym)        // else语句报错处理
     {
         test(fsys,0,33);
+    }
+    else if(sym==exitsym)
+    {
+        test(fsys,0,34);         // exit语句报错处理 
+
+        exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
+        elx++;
+        gen(jmp,0,0);
+
+        getsym();
     }
 
     test(fsys,0,19);

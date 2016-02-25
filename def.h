@@ -17,6 +17,8 @@ PROG	: PL/0_Define_h
 #define amax        2047           // maximum address
 #define levmax      3              // maximum depth of block nesting
 #define cxmax       2000           // size of code array
+#define elsize      2000           // while中的exit表的长度
+#define emsgsize    35             // 错误信息表的长度
 
 #define nul         0x1
 #define ident       0x2
@@ -57,7 +59,7 @@ PROG	: PL/0_Define_h
 //-------------Error
 //---------------------------------
 
-extern char* err_msg[34];        // 错误信息表
+extern char* err_msg[emsgsize];  // 错误信息表
 extern long err;                 // 错误计数
 
 void error(long);                // 返回错误信息
@@ -147,6 +149,8 @@ void listcode(long);             // 输出代码
 extern unsigned long declbegsys; // decl开始符号集合
 extern unsigned long statbegsys; // stmt开始符号集合
 extern unsigned long facbegsys;  // factor开始符号集合
+extern long exitlist[elsize];    // while中的exit地址表
+extern long elx;                 // exitlist指针
 
 void block(unsigned long);
 void constdeclaration();

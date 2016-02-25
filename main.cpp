@@ -28,9 +28,7 @@ int main()
         exit(1);
     }
 
-    err=0;
-    cc=0; cx=0; ll=0; ch=' '; kk=al; getsym();
-    lev=0; tx=0;
+    getsym();
     block(declbegsys|statbegsys|period);
     
     if(sym!=period)

@@ -13,7 +13,7 @@ INST    : 全局变量定义
 //-------------Error
 //---------------------------------
 
-char* err_msg[34] =        // 错误信息表
+char* err_msg[emsgsize] = // 错误信息表
 {
 /*  0 */    "",
 /*  1 */    "Found ':=' when expecting '='.",
@@ -48,7 +48,8 @@ char* err_msg[34] =        // 错误信息表
 /* 30 */    "",
 /* 31 */    "The number is too great.",
 /* 32 */    "There are too many levels.",
-/* 33 */    "';' expected, but 'ELSE' found."
+/* 33 */    "';' expected, but 'ELSE' found.",
+/* 34 */    "'EXIT' Found, but outside the 'WHILE'."
 };
 long err;                 // 错误计数
 
@@ -94,6 +95,8 @@ char mnemonic[8][3+1];    // 中间代码助记符表
 unsigned long declbegsys; // decl开始符号集合
 unsigned long statbegsys; // stmt开始符号集合
 unsigned long facbegsys;  // factor开始符号集合
+long exitlist[elsize];    // while中的exit地址表
+long elx;                 // exitlist指针
 
 //---------------------------------
 //-------------Interpretation
@@ -163,4 +166,14 @@ void globalinit()
     declbegsys=constsym|varsym|procsym;
     statbegsys=beginsym|callsym|ifsym|whilesym;
     facbegsys=ident|number|lparen;
+
+    err=0;                       // 错误表清零
+    cc=0;
+    cx=0;                        // 中间代码指针清零
+    ll=0;
+    ch=' ';
+    kk=al;
+    lev=0;                       // 代码块层级清零
+    tx=0;                        // 符号表指针清零
+    elx=0;                       // exitlist清零
 }
