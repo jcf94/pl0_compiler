@@ -41,58 +41,63 @@ void interpret()
                 break;
         
             case opr:
-                switch(i.a) 	// operator
+                switch(i.a) 	 // 运算指令
                 {
-                    case 0:	// return
+                    case 0:	     // 过程调用返回
                         t=b-1; p=s[t+3]; b=s[t+2];
                         break;
                  
-                    case 1:
+                    case 1:      // 负号
                         s[t]=-s[t];
                         break;
-                 
-                    case 2:
+                
+                    case 2:      // 加法
                         t=t-1; s[t]=s[t]+s[t+1];
                         break;
                  
-                    case 3:
+                    case 3:      // 减法
                         t=t-1; s[t]=s[t]-s[t+1];
                         break;
                  
-                    case 4:
+                    case 4:      // 乘法
                         t=t-1; s[t]=s[t]*s[t+1];
                         break;
-                 
-                    case 5:
+                
+                    case 5:      // 除法
                         t=t-1; s[t]=s[t]/s[t+1];
                         break;
                  
-                    case 6:
+                    case 6:      // odd
                         s[t]=s[t]%2;
                         break;
                  
-                    case 8:
+                    case 8:      // ==
                         t=t-1; s[t]=(s[t]==s[t+1]);
                         break;
                  
-                    case 9:
+                    case 9:      // !=
                         t=t-1; s[t]=(s[t]!=s[t+1]);
                         break;
                  
-                    case 10:
+                    case 10:     // <
                         t=t-1; s[t]=(s[t]<s[t+1]);
                         break;
                  
-                    case 11:
+                    case 11:     // >=
                         t=t-1; s[t]=(s[t]>=s[t+1]);
                         break;
                  
-                    case 12:
+                    case 12:     // >
                         t=t-1; s[t]=(s[t]>s[t+1]);
                         break;
                  
-                    case 13:
+                    case 13:     // <=
                         t=t-1; s[t]=(s[t]<=s[t+1]);
+                        break;
+
+                    case 14:     // 屏幕输出
+                        printf("%d\n", s[t]);
+                        break;
                 }
                 break;
             
@@ -101,7 +106,9 @@ void interpret()
                 break;
             
             case sto:
-                s[base(b,i.l)+i.a]=s[t]; printf("%10d\n", s[t]); t=t-1;
+                s[base(b,i.l)+i.a]=s[t];
+                //printf("%10d\n", s[t]);
+                t=t-1;
                 break;
             
             case cal:		// generate new block mark
@@ -125,5 +132,5 @@ void interpret()
                 t=t-1;
         }
     } while(p!=0);
-    printf("end PL/0\n");
+    printf("\nend PL/0\n");
 }

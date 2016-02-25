@@ -7,7 +7,7 @@ procedure multiply;
         a:=x; b:=y; z:=0;
         while b>0 do
             begin
-                if odd b then z:=z+a;
+                if odd(b) then z:=z+a;
                 a:=2*a;
                 exit;
                 b:=b/2;
@@ -27,4 +27,9 @@ begin
     call multiply;
     if 1<>2 then x:=x+1
     else x:=x-1;
+    //exit;
+    write(x);
+    write(2>1);
+    write(odd(x));
+    write(odd(x-1));
 end.

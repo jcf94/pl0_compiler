@@ -49,7 +49,8 @@ char* err_msg[emsgsize] = // 错误信息表
 /* 31 */    "The number is too great.",
 /* 32 */    "There are too many levels.",
 /* 33 */    "';' expected, but 'ELSE' found.",
-/* 34 */    "'EXIT' Found, but outside the 'WHILE'."
+/* 34 */    "'EXIT' Found, but outside the 'WHILE'.",
+/* 35 */    "There must be an '(' to follow the 'WRITE'/'READ'/'ODD'."
 };
 long err;                 // 错误计数
 
@@ -67,9 +68,9 @@ char a[al+1];             // 词法分析器中用于存放正在被被分析的词
 long kk;                  // 当前token的长度
 char id[al+1];            // 读到的最后一个标识符
 char word[norw][al+1];    // 保留字表
-unsigned long wsym[norw]; // 每一个保留字对应的symbol类型表
-unsigned long ssym[256];  // 每一个符号对应的symbol类型表
-unsigned long sym;        // 读到的最后一个token的类型
+unsigned long long wsym[norw]; // 每一个保留字对应的symbol类型表
+unsigned long long ssym[256];  // 每一个符号对应的symbol类型表
+unsigned long long sym;        // 读到的最后一个token的类型
 long num;                 // 读到的最后一个数字
 
 //---------------------------------
@@ -92,9 +93,9 @@ char mnemonic[8][3+1];    // 中间代码助记符表
 //-------------Parse
 //---------------------------------
 
-unsigned long declbegsys; // decl开始符号集合
-unsigned long statbegsys; // stmt开始符号集合
-unsigned long facbegsys;  // factor开始符号集合
+unsigned long long declbegsys; // decl开始符号集合
+unsigned long long statbegsys; // stmt开始符号集合
+unsigned long long facbegsys;  // factor开始符号集合
 long exitlist[elsize];    // while中的exit地址表
 long elx;                 // exitlist指针
 
@@ -125,9 +126,11 @@ void globalinit()
     strcpy(word[7],  "if        ");
     strcpy(word[8],  "odd       ");
     strcpy(word[9],  "procedure ");
-    strcpy(word[10], "then      ");
-    strcpy(word[11], "var       ");
-    strcpy(word[12], "while     ");
+    strcpy(word[10], "read      ");
+    strcpy(word[11], "then      ");
+    strcpy(word[12], "var       ");
+    strcpy(word[13], "while     ");
+    strcpy(word[14], "write     ");
     
     wsym[0]=beginsym;
     wsym[1]=callsym;
@@ -139,9 +142,11 @@ void globalinit()
     wsym[7]=ifsym;
     wsym[8]=oddsym;
     wsym[9]=procsym;
-    wsym[10]=thensym;
-    wsym[11]=varsym;
-    wsym[12]=whilesym;
+    wsym[10]=readsym;
+    wsym[11]=thensym;
+    wsym[12]=varsym;
+    wsym[13]=whilesym;
+    wsym[14]=writesym;
 
     ssym['+']=plus;
     ssym['-']=minus;
@@ -164,8 +169,8 @@ void globalinit()
     strcpy(mnemonic[jpc],"JPC");
   
     declbegsys=constsym|varsym|procsym;
-    statbegsys=beginsym|callsym|ifsym|whilesym;
-    facbegsys=ident|number|lparen;
+    statbegsys=beginsym|callsym|ifsym|whilesym|readsym|writesym;
+    facbegsys=ident|number|lparen|oddsym;
 
     err=0;                       // 错误表清零
     cc=0;

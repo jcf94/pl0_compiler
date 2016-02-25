@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        13             // no. of reserved words
+#define norw        15             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -18,40 +18,42 @@ PROG	: PL/0_Define_h
 #define levmax      3              // maximum depth of block nesting
 #define cxmax       2000           // size of code array
 #define elsize      2000           // while中的exit表的长度
-#define emsgsize    35             // 错误信息表的长度
+#define emsgsize    36             // 错误信息表的长度
 
-#define nul         0x1
-#define ident       0x2
-#define number      0x4
-#define plus        0x8
-#define minus       0x10
-#define times       0x20
-#define slash       0x40
-#define oddsym      0x80
-#define eql         0x100
-#define neq         0x200
-#define lss         0x400
-#define leq         0x800
-#define gtr         0x1000
-#define geq         0x2000
-#define lparen      0x4000
-#define rparen      0x8000
-#define comma       0x10000
-#define semicolon   0x20000
-#define period      0x40000
-#define becomes     0x80000
-#define beginsym    0x100000
-#define endsym      0x200000
-#define ifsym       0x400000
-#define thensym     0x800000
-#define whilesym    0x1000000
-#define dosym       0x2000000
-#define callsym     0x4000000
-#define constsym    0x8000000
-#define varsym      0x10000000
-#define procsym     0x20000000
-#define elsesym     0x40000000
-#define exitsym     0x80000000
+#define nul         0x1            // 空
+#define ident       0x2            // 标识符
+#define number      0x4            // 数值
+#define plus        0x8            // +
+#define minus       0x10           // -
+#define times       0x20           // *
+#define slash       0x40           // /
+#define oddsym      0x80           // 奇数判断
+#define eql         0x100          // =
+#define neq         0x200          // <>
+#define lss         0x400          // <
+#define leq         0x800          // <=
+#define gtr         0x1000         // >
+#define geq         0x2000         // >=
+#define lparen      0x4000         // (
+#define rparen      0x8000         // )
+#define comma       0x10000        // ,
+#define semicolon   0x20000        // ;
+#define period      0x40000        // .
+#define becomes     0x80000        // :=
+#define beginsym    0x100000       // 保留字：begin
+#define endsym      0x200000       // 保留字：end
+#define ifsym       0x400000       // 保留字：if
+#define thensym     0x800000       // 保留字：then
+#define whilesym    0x1000000      // 保留字：while
+#define dosym       0x2000000      // 保留字：do
+#define callsym     0x4000000      // 保留字：call
+#define constsym    0x8000000      // 保留字：const
+#define varsym      0x10000000     // 保留字：var
+#define procsym     0x20000000     // 保留字：procedure
+#define elsesym     0x40000000     // 保留字：else
+#define exitsym     0x80000000     // 保留字：exit
+#define readsym     0x100000000    // 保留字：read
+#define writesym    0x200000000    // 保留字：write
 
 #define stacksize   50000
 
@@ -78,14 +80,14 @@ extern char a[al+1];             // 词法分析器中用于存放正在被被分析的词
 extern long kk;                  // 当前token的长度
 extern char id[al+1];            // 读到的最后一个标识符
 extern char word[norw][al+1];    // 保留字表
-extern unsigned long wsym[norw]; // 每一个保留字对应的symbol类型表
-extern unsigned long ssym[256];  // 每一个符号对应的symbol类型表
-extern unsigned long sym;        // 读到的最后一个token的类型
+extern unsigned long long wsym[norw]; // 每一个保留字对应的symbol类型表
+extern unsigned long long ssym[256];  // 每一个符号对应的symbol类型表
+extern unsigned long long sym;        // 读到的最后一个token的类型
 extern long num;                 // 读到的最后一个数字
 
 void getch();                    // 读取单个字符
 void getsym();                   // 读取一个token
-void test(unsigned long, unsigned long, long);
+void test(unsigned long long, unsigned long long, long);
                                  // 测试当前token是否合法
 
 //---------------------------------
@@ -146,20 +148,20 @@ void listcode(long);             // 输出代码
 //-------------Parse
 //---------------------------------
 
-extern unsigned long declbegsys; // decl开始符号集合
-extern unsigned long statbegsys; // stmt开始符号集合
-extern unsigned long facbegsys;  // factor开始符号集合
+extern unsigned long long declbegsys; // decl开始符号集合
+extern unsigned long long statbegsys; // stmt开始符号集合
+extern unsigned long long facbegsys;  // factor开始符号集合
 extern long exitlist[elsize];    // while中的exit地址表
 extern long elx;                 // exitlist指针
 
-void block(unsigned long);
+void block(unsigned long long);
 void constdeclaration();
 void vardeclaration();
-void statement(unsigned long);
-void expression(unsigned long);
-void simpexpression(unsigned long);
-void term(unsigned long);
-void factor(unsigned long);
+void statement(unsigned long long);
+void expression(unsigned long long);
+void simpexpression(unsigned long long);
+void term(unsigned long long);
+void factor(unsigned long long);
 
 //---------------------------------
 //-------------Interpretation

@@ -38,7 +38,7 @@ int main()
     
     if(err==0)
     {
-       // interpret();
+        interpret();
         listcode(0);
     }
     else

@@ -214,7 +214,7 @@ void getsym()
 //¼ÌÐøºóÐøtokenÉ¨Ãè
 //---------------------------------
 
-void test(unsigned long s1, unsigned long s2, long n)
+void test(unsigned long long s1, unsigned long long s2, long n)
 {
     if (!(sym & s1))
     {

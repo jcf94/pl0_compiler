@@ -9,7 +9,7 @@ INST    : 语法分析
 
 #include "def.h"
 
-void block(unsigned long fsys)
+void block(unsigned long long fsys)
 {
     long tx0;       // initial table index
     long cx0;       // initial code index
@@ -167,215 +167,234 @@ void vardeclaration()
     }
 }
 
-void statement(unsigned long fsys)
+void statement(unsigned long long fsys)
 {
     long i,cx1,cx2;
 
-    if(sym==ident)               // 以标识符开始，则为赋值语句
+    switch(sym)
     {
-        i=position(id);
-        if(i==0)
-        {
-            error(11);
-        }
-        else if(table[i].kind!=variable)	// assignment to non-variable
-        {
-            error(12); i=0;
-        }
-
-        getsym();
-
-        if(sym==becomes)
-        {
-            getsym();
-        }
-        else
-        {
-            error(13);
-        }
-
-        simpexpression(fsys);
-
-        if(i!=0)
-        {
-            gen(sto,lev-table[i].level,table[i].addr);
-        }
-    }
-    else if(sym==callsym)        // 调用语句
-    {
-        getsym();
-        if(sym!=ident)
-        {
-            error(14);
-        }
-        else
+        case ident:              // 以标识符开始，则为赋值语句
         {
             i=position(id);
             if(i==0)
             {
                 error(11);
             }
-            else if(table[i].kind==proc)
+            else if(table[i].kind!=variable)    // assignment to non-variable
             {
-                gen(cal,lev-table[i].level,table[i].addr);
-            }
-            else
-            {
-                error(15);
+                error(12); i=0;
             }
 
             getsym();
-        }
-    }
-    else if(sym==ifsym)          // if语句
-    {
-        getsym();
-        expression(fsys|thensym|dosym);
 
-        if(sym==thensym)
-        {
-            getsym();
-        }
-        else
-        {
-            error(16);
-        }
-        cx1=cx;	gen(jpc,0,0);    // 记录下跳转代码的位置，此时跳转地址是0
-        statement(fsys|elsesym); // 紧接着可能是else
-        code[cx1].a=cx;          // 把跳转地址加上
-
-        if (sym==elsesym)        // else子句
-        {
-            getsym();
-
-            statement(fsys);
-        }
-    }
-    else if(sym==beginsym)       // begin语句
-    {
-        getsym(); statement(fsys|semicolon|endsym);
-        while(sym==semicolon||(sym&statbegsys))
-        {
-            if(sym==semicolon)
+            if(sym==becomes)
             {
                 getsym();
             }
             else
             {
-                error(10);
+                error(13);
             }
+
+            simpexpression(fsys);
+
+            if(i!=0)
+            {
+                gen(sto,lev-table[i].level,table[i].addr);
+            }
+        } break;
+        case callsym:            // 调用语句
+        {
+            getsym();
+            if(sym!=ident)
+            {
+                error(14);
+            }
+            else
+            {
+                i=position(id);
+                if(i==0)
+                {
+                    error(11);
+                }
+                else if(table[i].kind==proc)
+                {
+                    gen(cal,lev-table[i].level,table[i].addr);
+                }
+                else
+                {
+                    error(15);
+                }
+
+                getsym();
+            }
+        } break;
+        case ifsym:              // if语句
+        {
+            getsym();
+            expression(fsys|thensym|dosym);
+
+            if(sym==thensym)
+            {
+                getsym();
+            }
+            else
+            {
+                error(16);
+            }
+            cx1=cx;              // 记录下跳转代码的位置，此时跳转地址是0
+            gen(jpc,0,0);
+            statement(fsys|elsesym);// 紧接着可能是else
+            code[cx1].a=cx;      // 把跳转地址加上
+
+            if (sym==elsesym)    // else子句
+            {
+                cx1=cx;          // 记录下跳转代码的位置
+                gen(jmp,0,0);    // 如果有else，那么then后面部分执行完毕后要跳过这段
+                getsym();
+                statement(fsys);
+                code[cx1].a=cx;
+            }
+        } break;
+        case beginsym:           // begin语句
+        {
+            getsym();
             statement(fsys|semicolon|endsym);
-        }
-        if(sym==endsym)
+            while(sym==semicolon||(sym&statbegsys))
+            {
+                if(sym==semicolon)
+                {
+                    getsym();
+                }
+                else
+                {
+                    error(10);
+                }
+                statement(fsys|semicolon|endsym);
+            }
+            if(sym==endsym)
+            {
+                getsym();
+            }
+            else
+            {
+                error(17);
+            }
+        } break;
+        case whilesym:           // while语句
+        {
+            cx1=cx; getsym();
+            expression(fsys|dosym);
+
+            cx2=elx;                 // 记录下当前层开始的elx
+            exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
+            elx++;
+            //cx2=cx;
+            gen(jpc,0,0);
+            if(sym==dosym)
+            {
+                getsym();
+            }
+            else
+            {
+                error(18);
+            }
+
+            statement(fsys|exitsym);
+            gen(jmp,0,cx1);
+
+            //code[cx2].a=cx;
+            while(elx>cx2)           // 将exitlist中记录下的跳转语句的地址补充完整
+            {
+                elx--;
+                code[exitlist[elx]].a=cx;
+            }
+        } break;
+        case elsesym:            // else语句
+        {
+            test(fsys,0,33);     // 具体的处理已经在if中完成了，这里只要判错即可
+        } break;
+        case exitsym:            // exit语句
+        {
+            test(fsys,0,34);         // exit语句报错处理 
+
+            exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
+            elx++;
+            gen(jmp,0,0);
+
+            getsym();
+        } break;
+        case readsym:            // read语句
+        {
+
+        } break;
+        case writesym:           // write语句
         {
             getsym();
-        }
-        else
-        {
-            error(17);
-        }
-    }
-    else if(sym==whilesym)       // while语句
-    {
-        cx1=cx; getsym();
-        expression(fsys|dosym);
+            if (sym==lparen) getsym();
+            else error(35);
 
-        cx2=elx;                 // 记录下当前层开始的elx
-        exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
-        elx++;
-        //cx2=cx;
-        gen(jpc,0,0);
-        if(sym==dosym)
-        {
-            getsym();
-        }
-        else
-        {
-            error(18);
-        }
+            expression(fsys|comma|rparen);
+            gen(opr,0,14);
 
-        statement(fsys|exitsym);
-        gen(jmp,0,cx1);
+            while(sym==comma)
+            {
+                getsym();
+                expression(fsys|comma|rparen);
+                gen(opr,0,14);
+            }
 
-        //code[cx2].a=cx;
-        while(elx>cx2)           // 将exitlist中记录下的跳转语句的地址补充完整
-        {
-            elx--;
-            code[exitlist[elx]].a=cx;
-        }
-    }
-    else if(sym==elsesym)        // else语句报错处理
-    {
-        test(fsys,0,33);
-    }
-    else if(sym==exitsym)
-    {
-        test(fsys,0,34);         // exit语句报错处理 
+            if (sym==rparen) getsym();
+            else error(22);
 
-        exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
-        elx++;
-        gen(jmp,0,0);
-
-        getsym();
+        } break;
     }
 
     test(fsys,0,19);
 }
 
-void expression(unsigned long fsys)
+void expression(unsigned long long fsys)
 {
     unsigned long relop;
 
-    if(sym==oddsym)
+    simpexpression(fsys|eql|neq|lss|gtr|leq|geq);
+
+    if(sym&(eql|neq|lss|gtr|leq|geq))
     {
-        getsym(); simpexpression(fsys);
-        gen(opr, 0, 6);
-    }
-    else
-    {
-        simpexpression(fsys|eql|neq|lss|gtr|leq|geq);
+        relop=sym; getsym();
 
-        if(!(sym&(eql|neq|lss|gtr|leq|geq)))
+        simpexpression(fsys);
+
+        switch(relop)
         {
-            error(20);
-        }
-        else
-        {
-            relop=sym; getsym();
+            case eql:
+                gen(opr, 0, 8);
+                break;
 
-            simpexpression(fsys);
+            case neq:
+                gen(opr, 0, 9);
+                break;
 
-            switch(relop)
-            {
-                case eql:
-                    gen(opr, 0, 8);
-                    break;
+            case lss:
+                gen(opr, 0, 10);
+                break;
 
-                case neq:
-                    gen(opr, 0, 9);
-                    break;
+            case geq:
+                gen(opr, 0, 11);
+                break;
 
-                case lss:
-                    gen(opr, 0, 10);
-                    break;
+            case gtr:
+                gen(opr, 0, 12);
+                break;
 
-                case geq:
-                    gen(opr, 0, 11);
-                    break;
-
-                case gtr:
-                    gen(opr, 0, 12);
-                    break;
-
-                case leq:
-                    gen(opr, 0, 13);
-                    break;
-            }
+            case leq:
+                gen(opr, 0, 13);
+                break;
         }
     }
 }
 
-void simpexpression(unsigned long fsys)
+void simpexpression(unsigned long long fsys)
 {
     unsigned long addop;
 
@@ -412,7 +431,7 @@ void simpexpression(unsigned long fsys)
     }
 }
 
-void term(unsigned long fsys)
+void term(unsigned long long fsys)
 {
     unsigned long mulop;
 
@@ -434,7 +453,7 @@ void term(unsigned long fsys)
     }
 }
 
-void factor(unsigned long fsys)
+void factor(unsigned long long fsys)
 {
     long i;
 
@@ -446,10 +465,7 @@ void factor(unsigned long fsys)
         {
             i = position(id);
 
-            if(i==0)
-            {
-                error(11);
-            }
+            if(i==0) error(11);
             else
             {
                 switch(table[i].kind)
@@ -474,7 +490,8 @@ void factor(unsigned long fsys)
         {
             if(num>amax)
             {
-                error(31); num=0;
+                error(31);
+                num=0;
             }
 
             gen(lit,0,num);
@@ -485,16 +502,24 @@ void factor(unsigned long fsys)
             getsym();
             simpexpression(rparen|fsys);
 
-            if(sym==rparen)
-            {
-                getsym();
-            }
-            else
-            {
-                error(22);
-            }
+            if(sym==rparen) getsym();
+            else error(22);
+        }
+        else if(sym == oddsym)
+        {
+            getsym();
+
+            if(sym == lparen) getsym();
+            else error(35);
+
+            simpexpression(fsys|rparen);
+            gen(opr, 0, 6);
+
+            if(sym == rparen) getsym();
+            else error(22);
         }
 
+        //printf("%d\n", sym);
         test(fsys,lparen,23);
     }
 }
