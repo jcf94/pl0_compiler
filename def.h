@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        22             // no. of reserved words
+#define norw        25             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -18,7 +18,7 @@ PROG	: PL/0_Define_h
 #define levmax      3              // maximum depth of block nesting
 #define cxmax       2000           // size of code array
 #define elsize      2000           // while中的exit表的长度
-#define emsgsize    37             // 错误信息表的长度
+#define emsgsize    38             // 错误信息表的长度
 
 #define nul         0x1            // 空
 #define ident       0x2            // 标识符
@@ -61,6 +61,9 @@ PROG	: PL/0_Define_h
 #define notsym      0x4000000000   // 保留字：not
 #define divsym      0x8000000000   // 保留字：div
 #define modsym      0x10000000000  // 保留字：mod
+#define intsym      0x20000000000  // 保留字：integer
+#define realsym     0x40000000000  // 保留字：real
+#define boolsym     0x80000000000  // 保留字：boolean
 
 #define stacksize   50000
 

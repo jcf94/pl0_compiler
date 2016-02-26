@@ -16,7 +16,14 @@ void block(unsigned long long fsys)
     long tx1;       // save current table index before processing nested procedures
     long dx1;       // save data allocation index
 
-    dx=3; tx0=tx; table[tx].addr=cx; gen(jmp,0,0);
+    dx=3;
+    // 地址寄存器给出每层局部量当前已分配到的相对位置
+    // 置初始值为 3 的原因是：每一层最开始的位置有三个空间用于存放
+    // 静态链 SL、动态链 DL 和 返回地址 RA
+    tx0=tx;                      // 记录本层开始时符号表的位置
+    table[tx].addr=cx;           // 符号表记下当前层代码的开始地址
+    gen(jmp,0,0);                // block开始时首先写下一句跳转指令
+                                 // 地址到后面再补
 
     if(lev>levmax)
     {
@@ -25,7 +32,7 @@ void block(unsigned long long fsys)
 
     do
     {
-        if(sym==constsym)
+        if(sym==constsym)        // 常数定义
         {
             getsym();
 
@@ -47,7 +54,29 @@ void block(unsigned long long fsys)
                 }
             } while(sym==ident);
         }
+        /*
+        if(sym==varsym)
+        {
+            getsym();
+            do
+            {
+                vardeclaration();
+                while(sym==comma)
+                {
+                    getsym(); vardeclaration();
+                }
 
+                if(sym==semicolon)
+                {
+                    getsym();
+                }
+                else
+                {
+                    error(5);
+                }
+            } while(sym==ident);
+        }
+        */
         if(sym==varsym)
         {
             getsym();
@@ -109,13 +138,30 @@ void block(unsigned long long fsys)
         test(statbegsys|ident,declbegsys,7);
     } while(sym&declbegsys);
 
-    code[table[tx0].addr].a=cx;
-    table[tx0].addr=cx;     // start addr of code
-    cx0=cx; gen(Int,0,dx);
-    statement(fsys|semicolon|endsym);
-    gen(opr,0,0); // return
-    test(fsys,0,8);
-    //listcode(cx0);
+    if (sym==beginsym)
+    {
+        code[table[tx0].addr].a=cx;// 把block开头写下的跳转指令的地址补上
+        table[tx0].addr=cx;        // tx0的符号表存的是当前block的参数
+        cx0=cx;
+        gen(Int,0,dx);
+
+        getsym();
+        statement(fsys|semicolon|endsym);
+        while(sym==semicolon||(sym&statbegsys))
+        {
+            if(sym==semicolon) getsym();
+            else error(10);
+            
+            statement(fsys|semicolon|endsym);
+        }
+            
+        if(sym==endsym) getsym();
+        else error(17);
+
+        gen(opr,0,0);            // block结束，加上一句返回指令
+        test(fsys,0,8);
+        //listcode(cx0);        
+    } else error(37);
 }
 
 void constdeclaration()
@@ -272,14 +318,8 @@ void statement(unsigned long long fsys)
                 }
                 statement(fsys|semicolon|endsym);
             }
-            if(sym==endsym)
-            {
-                getsym();
-            }
-            else
-            {
-                error(17);
-            }
+            if(sym==endsym) getsym();
+            else error(17);
         } break;
         case whilesym:           // while语句
         {

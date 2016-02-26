@@ -51,7 +51,8 @@ char* err_msg[emsgsize] = // 错误信息表
 /* 33 */    "';' expected, but 'ELSE' found.",
 /* 34 */    "'EXIT' Found, but outside the 'WHILE'.",
 /* 35 */    "There must be an '(' to follow the 'WRITE'/'READ'/'ODD'.",
-/* 36 */    "Variable identifier expected."
+/* 36 */    "Variable identifier expected.",
+/* 37 */    "'BEGIN' expected."
 };
 long err;                 // 错误计数
 
@@ -121,49 +122,55 @@ void globalinit()
     
     strcpy(word[0],  "and       ");
     strcpy(word[1],  "begin     ");
-    strcpy(word[2],  "call      ");
-    strcpy(word[3],  "const     ");
-    strcpy(word[4],  "div       ");
-    strcpy(word[5],  "do        ");
-    strcpy(word[6],  "else      ");
-    strcpy(word[7],  "end       ");
-    strcpy(word[8],  "exit      ");
-    strcpy(word[9],  "false     ");
-    strcpy(word[10], "if        ");
-    strcpy(word[11], "mod       ");
-    strcpy(word[12], "not       ");
-    strcpy(word[13], "odd       ");
-    strcpy(word[14], "or        ");
-    strcpy(word[15], "procedure ");
-    strcpy(word[16], "read      ");
-    strcpy(word[17], "then      ");
-    strcpy(word[18], "true      ");
-    strcpy(word[19], "var       ");
-    strcpy(word[20], "while     ");
-    strcpy(word[21], "write     ");
+    strcpy(word[2],  "boolean   ");
+    strcpy(word[3],  "call      ");
+    strcpy(word[4],  "const     ");
+    strcpy(word[5],  "div       ");
+    strcpy(word[6],  "do        ");
+    strcpy(word[7],  "else      ");
+    strcpy(word[8],  "end       ");
+    strcpy(word[9],  "exit      ");
+    strcpy(word[10],  "false     ");
+    strcpy(word[11], "if        ");
+    strcpy(word[12], "integer   ");
+    strcpy(word[13], "mod       ");
+    strcpy(word[14], "not       ");
+    strcpy(word[15], "odd       ");
+    strcpy(word[16], "or        ");
+    strcpy(word[17], "procedure ");
+    strcpy(word[18], "read      ");
+    strcpy(word[19], "real      ");
+    strcpy(word[20], "then      ");
+    strcpy(word[21], "true      ");
+    strcpy(word[22], "var       ");
+    strcpy(word[23], "while     ");
+    strcpy(word[24], "write     ");
     
     wsym[0]=andsym;
     wsym[1]=beginsym;
-    wsym[2]=callsym;
-    wsym[3]=constsym;
-    wsym[4]=divsym;
-    wsym[5]=dosym;
-    wsym[6]=elsesym;
-    wsym[7]=endsym;
-    wsym[8]=exitsym;
-    wsym[9]=falsesym;
-    wsym[10]=ifsym;
-    wsym[11]=modsym;
-    wsym[12]=notsym;
-    wsym[13]=oddsym;
-    wsym[14]=orsym;
-    wsym[15]=procsym;
-    wsym[16]=readsym;
-    wsym[17]=thensym;
-    wsym[18]=truesym;
-    wsym[19]=varsym;
-    wsym[20]=whilesym;
-    wsym[21]=writesym;
+    wsym[2]=boolsym;
+    wsym[3]=callsym;
+    wsym[4]=constsym;
+    wsym[5]=divsym;
+    wsym[6]=dosym;
+    wsym[7]=elsesym;
+    wsym[8]=endsym;
+    wsym[9]=exitsym;
+    wsym[10]=falsesym;
+    wsym[11]=ifsym;
+    wsym[12]=intsym;
+    wsym[13]=modsym;
+    wsym[14]=notsym;
+    wsym[15]=oddsym;
+    wsym[16]=orsym;
+    wsym[17]=procsym;
+    wsym[18]=readsym;
+    wsym[19]=realsym;
+    wsym[20]=thensym;
+    wsym[21]=truesym;
+    wsym[22]=varsym;
+    wsym[23]=whilesym;
+    wsym[24]=writesym;
 
     ssym['+']=plus;
     ssym['-']=minus;

@@ -45,7 +45,7 @@ int main()
     }
     else
     {
-        printf("errors in PL/0 program\n");
+        printf("%3ld errors in PL/0 program\n",err);
     }
 
     return (0);
