@@ -52,7 +52,9 @@ char* err_msg[emsgsize] = // 错误信息表
 /* 34 */    "'EXIT' Found, but outside the 'WHILE'.",
 /* 35 */    "There must be an '(' to follow the 'WRITE'/'READ'/'ODD'.",
 /* 36 */    "Variable identifier expected.",
-/* 37 */    "'BEGIN' expected."
+/* 37 */    "'BEGIN' expected.",
+/* 38 */    "Undeclared Variable Type.",
+/* 39 */    "':' expected."
 };
 long err;                 // 错误计数
 
@@ -83,6 +85,8 @@ long tx;                  // 符号表指针
 tabletype table[txmax+1]; // 符号表
 long dx;                  // 数据栈指针
 long lev;                 // 当前层级
+long enterlist[etlsize];  // 变量声明中的enterlist表
+long etlx;                // enterlist指针
 
 //---------------------------------
 //-------------Generate
@@ -182,6 +186,7 @@ void globalinit()
     ssym[',']=comma;
     ssym['.']=period;
     ssym[';']=semicolon;
+    ssym[':']=colon;
   
     strcpy(mnemonic[lit],"LIT");
     strcpy(mnemonic[opr],"OPR");
@@ -207,4 +212,5 @@ void globalinit()
     lev=0;                       // 代码块层级清零
     tx=0;                        // 符号表指针清零
     elx=0;                       // exitlist清零
+    etlx=0;                      // enterlist清零
 }

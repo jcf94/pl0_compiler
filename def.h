@@ -18,7 +18,8 @@ PROG	: PL/0_Define_h
 #define levmax      3              // maximum depth of block nesting
 #define cxmax       2000           // size of code array
 #define elsize      2000           // while中的exit表的长度
-#define emsgsize    38             // 错误信息表的长度
+#define etlsize     2000           // 变量声明中的enterlist表的长度
+#define emsgsize    40             // 错误信息表的长度
 
 #define nul         0x1            // 空
 #define ident       0x2            // 标识符
@@ -64,6 +65,7 @@ PROG	: PL/0_Define_h
 #define intsym      0x20000000000  // 保留字：integer
 #define realsym     0x40000000000  // 保留字：real
 #define boolsym     0x80000000000  // 保留字：boolean
+#define colon       0x100000000000 // :
 
 #define stacksize   50000
 
@@ -107,7 +109,7 @@ void test(unsigned long long, unsigned long long, long);
 extern long tx;                  // 符号表指针
 enum object
 {
-    constant, variable, proc
+    constant, variable, proc, integer, boolean, real
 };
 struct tabletype
 {
@@ -120,6 +122,8 @@ struct tabletype
 extern tabletype table[txmax+1]; // 符号表
 extern long dx;                  // 数据栈指针
 extern long lev;                 // 当前层级
+extern long enterlist[etlsize];  // 变量声明中的enterlist表
+extern long etlx;                // enterlist指针
 
 void enter(enum object);         // 登录符号表
 long position(char* id);         // 查找符号表

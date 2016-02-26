@@ -54,49 +54,15 @@ void block(unsigned long long fsys)
                 }
             } while(sym==ident);
         }
-        /*
+
         if(sym==varsym)
         {
             getsym();
             do
             {
                 vardeclaration();
-                while(sym==comma)
-                {
-                    getsym(); vardeclaration();
-                }
+            } while(sym!=beginsym&&sym!=procsym);
 
-                if(sym==semicolon)
-                {
-                    getsym();
-                }
-                else
-                {
-                    error(5);
-                }
-            } while(sym==ident);
-        }
-        */
-        if(sym==varsym)
-        {
-            getsym();
-            do
-            {
-                vardeclaration();
-                while(sym==comma)
-                {
-                    getsym(); vardeclaration();
-                }
-
-                if(sym==semicolon)
-                {
-                    getsym();
-                }
-                else
-                {
-                    error(5);
-                }
-            } while(sym==ident);
         }
 
         while(sym==procsym)
@@ -205,12 +171,49 @@ void vardeclaration()
     if(sym == ident)
     {
         enter(variable);
+        enterlist[etlx]=tx;
+        etlx++;
         getsym();
-    }
-    else
+    } else error(4);
+
+    while(sym==comma)
     {
-        error(4);
+        getsym();
+        if(sym == ident)
+        {
+            enter(variable);
+            enterlist[etlx]=tx;
+            etlx++;
+            getsym();
+        } else error(4);
     }
+
+    if (sym==colon)
+    {
+        getsym();
+        switch(sym)
+        {
+            case intsym:
+                do
+                {
+                    etlx--;
+                    table[enterlist[etlx]].kind = integer;
+                } while(etlx>0);
+                break;
+            case realsym:
+
+                break;
+            case boolsym:
+
+                break;
+            default:
+                error(38);
+        }
+        getsym();
+    } else error(39);
+
+    if (sym==semicolon) getsym();
+    else error(10);
 }
 
 void statement(unsigned long long fsys)
@@ -226,9 +229,11 @@ void statement(unsigned long long fsys)
             {
                 error(11);
             }
-            else if(table[i].kind!=variable)    // assignment to non-variable
+            else if(  table[i].kind!=integer&&table[i].kind!=real&&
+            table[i].kind!=boolean)// ∑«±‰¡ø 
             {
-                error(12); i=0;
+                error(12);
+                i=0;
             }
 
             getsym();
@@ -579,7 +584,7 @@ void factor(unsigned long long fsys)
                             gen(lit, 0, table[i].val);
                             break;
 
-                        case variable:
+                        case integer:
                             gen(lod, lev-table[i].level, table[i].addr);
                             break;
 

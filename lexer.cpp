@@ -137,10 +137,7 @@ void getsym()
         {
             sym = becomes; getch();
         }
-        else
-        {
-            sym = nul;
-        }
+        else sym = colon;
     }
     else if (ch == '<')          // tokenÊ×Î»ÊÇ¡°<¡±
     {

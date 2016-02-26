@@ -12,7 +12,7 @@ INST    : ·ûºÅ±í´¦Àí
 
 void enter(enum object k)
 {
-    tx = tx + 1;
+    tx++;
 
     strcpy(table[tx].name, id);
     
