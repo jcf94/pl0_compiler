@@ -191,24 +191,26 @@ void vardeclaration()
     if (sym==colon)
     {
         getsym();
+        enum object temp;
         switch(sym)
         {
             case intsym:
-                do
-                {
-                    etlx--;
-                    table[enterlist[etlx]].kind = integer;
-                } while(etlx>0);
+                temp=integer;
                 break;
             case realsym:
-
+                temp=real;
                 break;
             case boolsym:
-
+                temp=boolean;
                 break;
             default:
                 error(38);
         }
+        do
+        {
+            etlx--;
+            table[enterlist[etlx]].kind = temp;
+        } while(etlx>0);
         getsym();
     } else error(39);
 
@@ -225,10 +227,7 @@ void statement(unsigned long long fsys)
         case ident:              // 以标识符开始，则为赋值语句
         {
             i=position(id);
-            if(i==0)
-            {
-                error(11);
-            }
+            if(i==0) error(11);
             else if(  table[i].kind!=integer&&table[i].kind!=real&&
             table[i].kind!=boolean)// 非变量 
             {
@@ -238,19 +237,15 @@ void statement(unsigned long long fsys)
 
             getsym();
 
-            if(sym==becomes)
-            {
-                getsym();
-            }
-            else
-            {
-                error(13);
-            }
+            if(sym==becomes) getsym();
+            else error(13);
 
             simpexpression(fsys);
 
             if(i!=0)
             {
+                if (table[i].kind==boolean) gen(opr,0,21);
+                                 // 对boolean变量进行数值整理
                 gen(sto,lev-table[i].level,table[i].addr);
             }
         } break;
@@ -334,7 +329,7 @@ void statement(unsigned long long fsys)
             cx2=elx;                 // 记录下当前层开始的elx
             exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
             elx++;
-            //cx2=cx;
+            
             gen(jpc,0,0);
             if(sym==dosym)
             {
@@ -348,7 +343,6 @@ void statement(unsigned long long fsys)
             statement(fsys|exitsym);
             gen(jmp,0,cx1);
 
-            //code[cx2].a=cx;
             while(elx>cx2)           // 将exitlist中记录下的跳转语句的地址补充完整
             {
                 elx--;
@@ -375,50 +369,12 @@ void statement(unsigned long long fsys)
             if (sym==lparen) getsym();
             else error(35);
 
-            if (sym==ident)
-            {
-                i=position(id);
-                if(i==0)
-                {
-                    error(11);
-                }
-                else if(table[i].kind!=variable)
-                {
-                    error(12); i=0;
-                }
-
-                gen(opr,0,15);
-                if(i!=0)
-                {
-                    gen(sto,lev-table[i].level,table[i].addr);
-                }
-
-                getsym();
-            } else error(36);
+            readata();
 
             while(sym==comma)
             {
                 getsym();
-                if (sym==ident)
-                {
-                    i=position(id);
-                    if(i==0)
-                    {
-                        error(11);
-                    }
-                    else if(table[i].kind!=variable)
-                    {
-                        error(12); i=0;
-                    }
-
-                    gen(opr,0,15);
-                    if(i!=0)
-                    {
-                        gen(sto,lev-table[i].level,table[i].addr);
-                    }
-
-                    getsym();
-                } else error(36);
+                readata();
             }
 
             if (sym==rparen) getsym();
@@ -585,6 +541,7 @@ void factor(unsigned long long fsys)
                             break;
 
                         case integer:
+                        case boolean:
                             gen(lod, lev-table[i].level, table[i].addr);
                             break;
 
@@ -650,4 +607,26 @@ void factor(unsigned long long fsys)
 
         test(fsys,lparen,23);
     }
+}
+
+void readata()
+{
+    if (sym==ident)
+    {
+        long i=position(id);
+        if(i==0) error(11);
+        else if(table[i].kind!=integer&&table[i].kind!=real&&table[i].kind!=boolean)
+        {
+            error(12); i=0;
+        }
+
+        gen(opr,0,15);
+        if(i!=0)
+        {
+            if (table[i].kind==boolean) gen(opr,0,21);
+            gen(sto,lev-table[i].level,table[i].addr);
+        }
+
+        getsym();
+    } else error(36);
 }

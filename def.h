@@ -178,6 +178,7 @@ void expression(unsigned long long);
 void simpexpression(unsigned long long);
 void term(unsigned long long);
 void factor(unsigned long long);
+void readata();                  // 从屏幕中读入一个数据
 
 //---------------------------------
 //-------------Interpretation

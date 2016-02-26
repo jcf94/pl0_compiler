@@ -122,6 +122,10 @@ void interpret()
                     case 20:     // mod
                         t--; s[t]=s[t]%s[t+1];
                         break;
+
+                    case 21:
+                        if (s[t]) s[t]=1;
+                        break;
                 }
                 break;
             

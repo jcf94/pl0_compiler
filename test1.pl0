@@ -1,5 +1,6 @@
 const m=7, n=85;
 var x,y,z,q,r:integer;
+    bool:boolean;
 // test
 procedure multiply;
     var a,b:integer;
@@ -41,4 +42,8 @@ begin
     write(0 or 0);
     write(5 div 2);
     write(5 mod 2);
+    bool:=false;
+    write(bool);
+    bool:=100;
+    write(bool);
 end.
