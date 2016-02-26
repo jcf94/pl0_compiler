@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1456456663 source:c:\users\jcf\desktop\pl0\def.cpp
+1456465651 source:c:\users\jcf\desktop\pl0\def.cpp
 	<cstring>
 	"def.h"
 
-1456455997 c:\users\jcf\desktop\pl0\def.h
+1456465478 c:\users\jcf\desktop\pl0\def.h
 	<cstdio>
 
 1456216453 source:c:\users\jcf\desktop\pl0\env.cpp
@@ -20,7 +20,7 @@
 	<cstdlib>
 	"def.h"
 
-1456456297 source:c:\users\jcf\desktop\pl0\int.cpp
+1456465769 source:c:\users\jcf\desktop\pl0\int.cpp
 	"def.h"
 
 1456391498 source:c:\users\jcf\desktop\pl0\lexer.cpp
@@ -30,11 +30,11 @@
 	<cstdlib>
 	"def.h"
 
-1456455028 source:c:\users\jcf\desktop\pl0\main.cpp
+1456457300 source:c:\users\jcf\desktop\pl0\main.cpp
 	<cstdlib>
 	"def.h"
 
-1456456879 source:c:\users\jcf\desktop\pl0\parse.cpp
+1456465784 source:c:\users\jcf\desktop\pl0\parse.cpp
 	<cstdio>
 	"def.h"
 

@@ -47,23 +47,23 @@ void interpret()
                         t=b-1; p=s[t+3]; b=s[t+2];
                         break;
                  
-                    case 1:      // 负号
+                    case 1:      // -
                         s[t]=-s[t];
                         break;
                 
-                    case 2:      // 加法
+                    case 2:      // +
                         t=t-1; s[t]=s[t]+s[t+1];
                         break;
                  
-                    case 3:      // 减法
+                    case 3:      // -
                         t=t-1; s[t]=s[t]-s[t+1];
                         break;
                  
-                    case 4:      // 乘法
+                    case 4:      // *
                         t=t-1; s[t]=s[t]*s[t+1];
                         break;
                 
-                    case 5:      // 除法
+                    case 5:      // /
                         t=t-1; s[t]=s[t]/s[t+1];
                         break;
                  
@@ -101,6 +101,18 @@ void interpret()
 
                     case 15:     // 屏幕输入
                         t=t+1; scanf("%d",&s[t]);
+                        break;
+
+                    case 16:     // not
+                        if (s[t]) s[t]=0; else s[t]=1;
+                        break;
+
+                    case 17:     // and
+                        t=t-1; s[t]=s[t]&s[t+1];
+                        break;
+
+                    case 18:     // or
+                        t=t-1; s[t]=s[t]|s[t+1];
                         break;
                 }
                 break;

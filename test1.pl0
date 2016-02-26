@@ -30,5 +30,13 @@ begin
     //exit;
     write(x,2>1,odd(x),odd(x-1));
     //read(x,y);
-    if true then write(y,x);
+    if (true) then write(y,x);
+    write(not false);
+    write(not(2>1));
+    write(1 and 1);
+    write(0 and 1);
+    write(0 and 0);
+    write(1 or 1);
+    write(0 or 1);
+    write(0 or 0);
 end.

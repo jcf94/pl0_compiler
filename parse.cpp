@@ -446,59 +446,66 @@ void expression(unsigned long long fsys)
 
 void simpexpression(unsigned long long fsys)
 {
-    unsigned long addop;
+    unsigned long long addop;
 
-    if(sym==plus || sym==minus)
+    if(sym==plus || sym==minus)  // 处理开头的正负号
     {
         addop=sym; getsym();
 
-        term(fsys|plus|minus);
+        term(fsys|simpexpbegsys);
 
         if(addop==minus)
         {
             gen(opr,0,1);
         }
     }
-    else
-    {
-        term(fsys|plus|minus);
-    }
+    else term(fsys|simpexpbegsys);
 
-    while(sym==plus || sym==minus)
+    while(sym & simpexpbegsys)
     {
         addop=sym; getsym();
 
-        term(fsys|plus|minus);
+        term(fsys|simpexpbegsys);
 
-        if(addop==plus)
+        switch(addop)
         {
-            gen(opr,0,2);
-        }
-        else
-        {
-            gen(opr,0,3);
+            case plus:
+                gen(opr,0,2);
+                break;
+            case minus:
+                gen(opr,0,3);
+                break;
+            case orsym:
+                gen(opr,0,18);
+                break;
         }
     }
 }
 
 void term(unsigned long long fsys)
 {
-    unsigned long mulop;
+    unsigned long long mulop;
 
-    factor(fsys|times|slash);
+    factor(fsys|termbegsys);
 
-    while(sym==times || sym==slash)
+    while(sym & termbegsys)
     {
-        mulop = sym; getsym();
+        mulop = sym;
+        getsym();
 
-        factor(fsys|times|slash);
+        factor(fsys|termbegsys);
 
-        if(mulop == times)
+        switch(mulop)
         {
-            gen(opr,0,4);
-        }
-        else{
-            gen(opr,0,5);
+            case times:
+                gen(opr,0,4);
+                break;
+            case slash:
+                gen(opr,0,5);
+                break;
+            case andsym:
+                gen(opr,0,17);
+                break;
         }
     }
 }
@@ -552,7 +559,7 @@ void factor(unsigned long long fsys)
             case lparen:
             {
                 getsym();
-                simpexpression(rparen|fsys);
+                expression(rparen|fsys);
 
                 if(sym==rparen) getsym();
                 else error(22);
@@ -579,6 +586,14 @@ void factor(unsigned long long fsys)
             {
                 gen(lit,0,1);
                 getsym();
+            } break;
+            case notsym:
+            {
+                getsym();
+
+                factor(fsys);
+                gen(opr,0,16);
+
             } break;
         }
 

@@ -96,6 +96,8 @@ char mnemonic[8][3+1];    // 中间代码助记符表
 
 unsigned long long declbegsys; // decl开始符号集合
 unsigned long long statbegsys; // stmt开始符号集合
+unsigned long long simpexpbegsys;// simpexp开始符号集合
+unsigned long long termbegsys; // term开始符号集合
 unsigned long long facbegsys;  // factor开始符号集合
 long exitlist[elsize];    // while中的exit地址表
 long elx;                 // exitlist指针
@@ -117,41 +119,47 @@ void globalinit()
         ssym[i]=nul;
     }
     
-    strcpy(word[0],  "begin     ");
-    strcpy(word[1],  "call      ");
-    strcpy(word[2],  "const     ");
-    strcpy(word[3],  "do        ");
-    strcpy(word[4],  "else      ");
-    strcpy(word[5],  "end       ");
-    strcpy(word[6],  "exit      ");
-    strcpy(word[7],  "false     ");
-    strcpy(word[8],  "if        ");
-    strcpy(word[9],  "odd       ");
-    strcpy(word[10], "procedure ");
-    strcpy(word[11], "read      ");
-    strcpy(word[12], "then      ");
-    strcpy(word[13], "true      ");
-    strcpy(word[14], "var       ");
-    strcpy(word[15], "while     ");
-    strcpy(word[16], "write     ");
+    strcpy(word[0],  "and       ");
+    strcpy(word[1],  "begin     ");
+    strcpy(word[2],  "call      ");
+    strcpy(word[3],  "const     ");
+    strcpy(word[4],  "do        ");
+    strcpy(word[5],  "else      ");
+    strcpy(word[6],  "end       ");
+    strcpy(word[7],  "exit      ");
+    strcpy(word[8],  "false     ");
+    strcpy(word[9],  "if        ");
+    strcpy(word[10], "not       ");
+    strcpy(word[11], "odd       ");
+    strcpy(word[12], "or        ");
+    strcpy(word[13], "procedure ");
+    strcpy(word[14], "read      ");
+    strcpy(word[15], "then      ");
+    strcpy(word[16], "true      ");
+    strcpy(word[17], "var       ");
+    strcpy(word[18], "while     ");
+    strcpy(word[19], "write     ");
     
-    wsym[0]=beginsym;
-    wsym[1]=callsym;
-    wsym[2]=constsym;
-    wsym[3]=dosym;
-    wsym[4]=elsesym;
-    wsym[5]=endsym;
-    wsym[6]=exitsym;
-    wsym[7]=falsesym;
-    wsym[8]=ifsym;
-    wsym[9]=oddsym;
-    wsym[10]=procsym;
-    wsym[11]=readsym;
-    wsym[12]=thensym;
-    wsym[13]=truesym;
-    wsym[14]=varsym;
-    wsym[15]=whilesym;
-    wsym[16]=writesym;
+    wsym[0]=andsym;
+    wsym[1]=beginsym;
+    wsym[2]=callsym;
+    wsym[3]=constsym;
+    wsym[4]=dosym;
+    wsym[5]=elsesym;
+    wsym[6]=endsym;
+    wsym[7]=exitsym;
+    wsym[8]=falsesym;
+    wsym[9]=ifsym;
+    wsym[10]=notsym;
+    wsym[11]=oddsym;
+    wsym[12]=orsym;
+    wsym[13]=procsym;
+    wsym[14]=readsym;
+    wsym[15]=thensym;
+    wsym[16]=truesym;
+    wsym[17]=varsym;
+    wsym[18]=whilesym;
+    wsym[19]=writesym;
 
     ssym['+']=plus;
     ssym['-']=minus;
@@ -175,7 +183,9 @@ void globalinit()
   
     declbegsys=constsym|varsym|procsym;
     statbegsys=beginsym|callsym|ifsym|whilesym|readsym|writesym;
-    facbegsys=ident|number|lparen|oddsym|truesym|falsesym;
+    simpexpbegsys=plus|minus|orsym;
+    termbegsys=times|slash|andsym;
+    facbegsys=ident|number|lparen|oddsym|truesym|falsesym|notsym;
 
     err=0;                       // 错误表清零
     cc=0;

@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        17             // no. of reserved words
+#define norw        20             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -56,6 +56,9 @@ PROG	: PL/0_Define_h
 #define writesym    0x200000000    // 保留字：write
 #define falsesym    0x400000000    // 保留字：false
 #define truesym     0x800000000    // 保留字：true
+#define andsym      0x1000000000   // 保留字：and
+#define orsym       0x2000000000   // 保留字：or
+#define notsym      0x4000000000   // 保留字：not
 
 #define stacksize   50000
 
@@ -152,6 +155,8 @@ void listcode(long);             // 输出代码
 
 extern unsigned long long declbegsys; // decl开始符号集合
 extern unsigned long long statbegsys; // stmt开始符号集合
+extern unsigned long long simpexpbegsys;// simpexp开始符号集合
+extern unsigned long long termbegsys; // term开始符号集合
 extern unsigned long long facbegsys;  // factor开始符号集合
 extern long exitlist[elsize];    // while中的exit地址表
 extern long elx;                 // exitlist指针
