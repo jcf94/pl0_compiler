@@ -39,4 +39,6 @@ begin
     write(1 or 1);
     write(0 or 1);
     write(0 or 0);
+    write(5 div 2);
+    write(5 mod 2);
 end.

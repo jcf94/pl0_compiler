@@ -506,6 +506,12 @@ void term(unsigned long long fsys)
             case andsym:
                 gen(opr,0,17);
                 break;
+            case divsym:
+                gen(opr,0,19);
+                break;
+            case modsym:
+                gen(opr,0,20);
+                break;
         }
     }
 }

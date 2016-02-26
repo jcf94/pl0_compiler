@@ -52,19 +52,19 @@ void interpret()
                         break;
                 
                     case 2:      // +
-                        t=t-1; s[t]=s[t]+s[t+1];
+                        t--; s[t]=s[t]+s[t+1];
                         break;
                  
                     case 3:      // -
-                        t=t-1; s[t]=s[t]-s[t+1];
+                        t--; s[t]=s[t]-s[t+1];
                         break;
                  
                     case 4:      // *
-                        t=t-1; s[t]=s[t]*s[t+1];
+                        t--; s[t]=s[t]*s[t+1];
                         break;
                 
                     case 5:      // /
-                        t=t-1; s[t]=s[t]/s[t+1];
+                        t--; s[t]=s[t]/s[t+1];
                         break;
                  
                     case 6:      // odd
@@ -72,27 +72,27 @@ void interpret()
                         break;
                  
                     case 8:      // ==
-                        t=t-1; s[t]=(s[t]==s[t+1]);
+                        t--; s[t]=(s[t]==s[t+1]);
                         break;
                  
                     case 9:      // !=
-                        t=t-1; s[t]=(s[t]!=s[t+1]);
+                        t--; s[t]=(s[t]!=s[t+1]);
                         break;
                  
                     case 10:     // <
-                        t=t-1; s[t]=(s[t]<s[t+1]);
+                        t--; s[t]=(s[t]<s[t+1]);
                         break;
                  
                     case 11:     // >=
-                        t=t-1; s[t]=(s[t]>=s[t+1]);
+                        t--; s[t]=(s[t]>=s[t+1]);
                         break;
                  
                     case 12:     // >
-                        t=t-1; s[t]=(s[t]>s[t+1]);
+                        t--; s[t]=(s[t]>s[t+1]);
                         break;
                  
                     case 13:     // <=
-                        t=t-1; s[t]=(s[t]<=s[t+1]);
+                        t--; s[t]=(s[t]<=s[t+1]);
                         break;
 
                     case 14:     // ÆÁÄ»Êä³ö
@@ -108,11 +108,19 @@ void interpret()
                         break;
 
                     case 17:     // and
-                        t=t-1; s[t]=s[t]&s[t+1];
+                        t--; s[t]=s[t]&s[t+1];
                         break;
 
                     case 18:     // or
-                        t=t-1; s[t]=s[t]|s[t+1];
+                        t--; s[t]=s[t]|s[t+1];
+                        break;
+
+                    case 19:     // div
+                        t--; s[t]=s[t]/s[t+1];
+                        break;
+
+                    case 20:     // mod
+                        t--; s[t]=s[t]%s[t+1];
                         break;
                 }
                 break;
@@ -124,7 +132,7 @@ void interpret()
             case sto:
                 s[base(b,i.l)+i.a]=s[t];
                 //printf("%10d\n", s[t]);
-                t=t-1;
+                t--;
                 break;
             
             case cal:		// generate new block mark
@@ -145,7 +153,7 @@ void interpret()
                 {
                     p=i.a;
                 }
-                t=t-1;
+                t--;
         }
     } while(p!=0);
     printf("\nend PL/0\n");
