@@ -124,14 +124,16 @@ void globalinit()
     strcpy(word[4],  "else      ");
     strcpy(word[5],  "end       ");
     strcpy(word[6],  "exit      ");
-    strcpy(word[7],  "if        ");
-    strcpy(word[8],  "odd       ");
-    strcpy(word[9],  "procedure ");
-    strcpy(word[10], "read      ");
-    strcpy(word[11], "then      ");
-    strcpy(word[12], "var       ");
-    strcpy(word[13], "while     ");
-    strcpy(word[14], "write     ");
+    strcpy(word[7],  "false     ");
+    strcpy(word[8],  "if        ");
+    strcpy(word[9],  "odd       ");
+    strcpy(word[10], "procedure ");
+    strcpy(word[11], "read      ");
+    strcpy(word[12], "then      ");
+    strcpy(word[13], "true      ");
+    strcpy(word[14], "var       ");
+    strcpy(word[15], "while     ");
+    strcpy(word[16], "write     ");
     
     wsym[0]=beginsym;
     wsym[1]=callsym;
@@ -140,14 +142,16 @@ void globalinit()
     wsym[4]=elsesym;
     wsym[5]=endsym;
     wsym[6]=exitsym;
-    wsym[7]=ifsym;
-    wsym[8]=oddsym;
-    wsym[9]=procsym;
-    wsym[10]=readsym;
-    wsym[11]=thensym;
-    wsym[12]=varsym;
-    wsym[13]=whilesym;
-    wsym[14]=writesym;
+    wsym[7]=falsesym;
+    wsym[8]=ifsym;
+    wsym[9]=oddsym;
+    wsym[10]=procsym;
+    wsym[11]=readsym;
+    wsym[12]=thensym;
+    wsym[13]=truesym;
+    wsym[14]=varsym;
+    wsym[15]=whilesym;
+    wsym[16]=writesym;
 
     ssym['+']=plus;
     ssym['-']=minus;
@@ -171,7 +175,7 @@ void globalinit()
   
     declbegsys=constsym|varsym|procsym;
     statbegsys=beginsym|callsym|ifsym|whilesym|readsym|writesym;
-    facbegsys=ident|number|lparen|oddsym;
+    facbegsys=ident|number|lparen|oddsym|truesym|falsesym;
 
     err=0;                       // ¥ÌŒÛ±Ì«Â¡„
     cc=0;

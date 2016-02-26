@@ -29,6 +29,6 @@ begin
     else x:=x-1;
     //exit;
     write(x,2>1,odd(x),odd(x-1));
-    read(x,y);
-    write(y,x);
+    //read(x,y);
+    if true then write(y,x);
 end.

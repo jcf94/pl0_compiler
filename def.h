@@ -10,7 +10,7 @@ PROG	: PL/0_Define_h
 //-------------Define
 //---------------------------------
 
-#define norw        15             // no. of reserved words
+#define norw        17             // no. of reserved words
 #define txmax       100            // length of identifier table
 #define nmax        14             // max. no. of digits in numbers
 #define al          10             // length of identifiers
@@ -54,6 +54,8 @@ PROG	: PL/0_Define_h
 #define exitsym     0x80000000     // ±£Áô×Ö£ºexit
 #define readsym     0x100000000    // ±£Áô×Ö£ºread
 #define writesym    0x200000000    // ±£Áô×Ö£ºwrite
+#define falsesym    0x400000000    // ±£Áô×Ö£ºfalse
+#define truesym     0x800000000    // ±£Áô×Ö£ºtrue
 
 #define stacksize   50000
 

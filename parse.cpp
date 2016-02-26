@@ -511,65 +511,77 @@ void factor(unsigned long long fsys)
 
     while(sym & facbegsys)
     {
-        if(sym == ident)
+        switch(sym)
         {
-            i = position(id);
-
-            if(i==0) error(11);
-            else
+            case ident:
             {
-                switch(table[i].kind)
+                i = position(id);
+
+                if(i==0) error(11);
+                else
                 {
-                    case constant:
-                        gen(lit, 0, table[i].val);
-                        break;
+                    switch(table[i].kind)
+                    {
+                        case constant:
+                            gen(lit, 0, table[i].val);
+                            break;
 
-                    case variable:
-                        gen(lod, lev-table[i].level, table[i].addr);
-                        break;
+                        case variable:
+                            gen(lod, lev-table[i].level, table[i].addr);
+                            break;
 
-                    case proc:
-                        error(21);
-                        break;
+                        case proc:
+                            error(21);
+                            break;
+                    }
                 }
-            }
 
-            getsym();
-        }
-        else if(sym == number)
-        {
-            if(num>amax)
+                getsym();
+            } break;
+            case number:
             {
-                error(31);
-                num=0;
-            }
+                if(num>amax)
+                {
+                    error(31);
+                    num=0;
+                }
 
-            gen(lit,0,num);
-            getsym();
+                gen(lit,0,num);
+                getsym();
+            } break;
+            case lparen:
+            {
+                getsym();
+                simpexpression(rparen|fsys);
+
+                if(sym==rparen) getsym();
+                else error(22);
+            } break;
+            case oddsym:
+            {
+                getsym();
+
+                if(sym == lparen) getsym();
+                else error(35);
+
+                simpexpression(fsys|rparen);
+                gen(opr, 0, 6);
+
+                if(sym == rparen) getsym();
+                else error(22);
+            } break;
+            case falsesym:
+            {
+                gen(lit,0,0);
+                getsym();
+            } break;
+            case truesym:
+            {
+                gen(lit,0,1);
+                getsym();
+            } break;
         }
-        else if(sym == lparen)
-        {
-            getsym();
-            simpexpression(rparen|fsys);
 
-            if(sym==rparen) getsym();
-            else error(22);
-        }
-        else if(sym == oddsym)
-        {
-            getsym();
-
-            if(sym == lparen) getsym();
-            else error(35);
-
-            simpexpression(fsys|rparen);
-            gen(opr, 0, 6);
-
-            if(sym == rparen) getsym();
-            else error(22);
-        }
-
-        //printf("%d\n", sym);
         test(fsys,lparen,23);
     }
 }
