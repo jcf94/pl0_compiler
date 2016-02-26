@@ -98,6 +98,10 @@ void interpret()
                     case 14:     // ÆÁÄ»Êä³ö
                         printf("%d\n", s[t]);
                         break;
+
+                    case 15:     // ÆÁÄ»ÊäÈë
+                        t=t+1; scanf("%d",&s[t]);
+                        break;
                 }
                 break;
             

@@ -326,7 +326,58 @@ void statement(unsigned long long fsys)
         } break;
         case readsym:            // read”Ôæ‰
         {
+            getsym();
+            if (sym==lparen) getsym();
+            else error(35);
 
+            if (sym==ident)
+            {
+                i=position(id);
+                if(i==0)
+                {
+                    error(11);
+                }
+                else if(table[i].kind!=variable)
+                {
+                    error(12); i=0;
+                }
+
+                gen(opr,0,15);
+                if(i!=0)
+                {
+                    gen(sto,lev-table[i].level,table[i].addr);
+                }
+
+                getsym();
+            } else error(36);
+
+            while(sym==comma)
+            {
+                getsym();
+                if (sym==ident)
+                {
+                    i=position(id);
+                    if(i==0)
+                    {
+                        error(11);
+                    }
+                    else if(table[i].kind!=variable)
+                    {
+                        error(12); i=0;
+                    }
+
+                    gen(opr,0,15);
+                    if(i!=0)
+                    {
+                        gen(sto,lev-table[i].level,table[i].addr);
+                    }
+
+                    getsym();
+                } else error(36);
+            }
+
+            if (sym==rparen) getsym();
+            else error(22);
         } break;
         case writesym:           // write”Ôæ‰
         {
@@ -346,7 +397,6 @@ void statement(unsigned long long fsys)
 
             if (sym==rparen) getsym();
             else error(22);
-
         } break;
     }
 

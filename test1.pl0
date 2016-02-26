@@ -28,8 +28,7 @@ begin
     if 1<>2 then x:=x+1
     else x:=x-1;
     //exit;
-    write(x);
-    write(2>1);
-    write(odd(x));
-    write(odd(x-1));
+    write(x,2>1,odd(x),odd(x-1));
+    read(x,y);
+    write(y,x);
 end.

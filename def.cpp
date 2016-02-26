@@ -50,7 +50,8 @@ char* err_msg[emsgsize] = // 错误信息表
 /* 32 */    "There are too many levels.",
 /* 33 */    "';' expected, but 'ELSE' found.",
 /* 34 */    "'EXIT' Found, but outside the 'WHILE'.",
-/* 35 */    "There must be an '(' to follow the 'WRITE'/'READ'/'ODD'."
+/* 35 */    "There must be an '(' to follow the 'WRITE'/'READ'/'ODD'.",
+/* 36 */    "Variable identifier expected."
 };
 long err;                 // 错误计数
 

@@ -36,17 +36,17 @@ int main()
         error(9);
     }
     
+    fclose(infile);
+
     if(err==0)
     {
-        interpret();
         listcode(0);
+        interpret();
     }
     else
     {
         printf("errors in PL/0 program\n");
     }
-    
-    fclose(infile);
 
     return (0);
 }

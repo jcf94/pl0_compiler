@@ -18,7 +18,7 @@ PROG	: PL/0_Define_h
 #define levmax      3              // maximum depth of block nesting
 #define cxmax       2000           // size of code array
 #define elsize      2000           // while中的exit表的长度
-#define emsgsize    36             // 错误信息表的长度
+#define emsgsize    37             // 错误信息表的长度
 
 #define nul         0x1            // 空
 #define ident       0x2            // 标识符
