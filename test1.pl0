@@ -10,7 +10,7 @@ procedure multiply;
             begin
                 if odd(b) then z:=z+a;
                 a:=2*a;
-                exit;
+                //exit;
                 b:=b/2;
             end
     end;
@@ -46,4 +46,7 @@ begin
     write(bool);
     bool:=100;
     write(bool);
+    write(1111);//我是分割线
+    write(0 or 0 or 1);
+    write(1 and 1 and 0);
 end.

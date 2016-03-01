@@ -153,11 +153,7 @@ void interpret()
                 break;
             
             case jpc:
-                if(s[t]==0)
-                {
-                    p=i.a;
-                }
-                t--;
+                if(s[t]==0) p=i.a; //t--;
         }
     } while(p!=0);
     printf("\nend PL/0\n");

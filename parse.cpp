@@ -355,9 +355,9 @@ void statement(unsigned long long fsys)
         } break;
         case exitsym:            // exit语句
         {
-            test(fsys,0,34);         // exit语句报错处理 
+            test(fsys,0,34);     // exit语句报错处理 
 
-            exitlist[elx]=cx;        // 将jpc的位置记录进exitlist
+            exitlist[elx]=cx;    // 将jpc的位置记录进exitlist
             elx++;
             gen(jmp,0,0);
 
@@ -448,6 +448,7 @@ void expression(unsigned long long fsys)
 void simpexpression(unsigned long long fsys)
 {
     unsigned long long addop;
+    long elx1;
 
     if(sym==plus || sym==minus)  // 处理开头的正负号
     {
@@ -462,10 +463,24 @@ void simpexpression(unsigned long long fsys)
     }
     else term(fsys|simpexpbegsys);
 
+    elx1=elx;                    // 记录下当前层开始的elx
+
     while(sym & simpexpbegsys)
     {
-        addop=sym; getsym();
+        addop=sym;
 
+        if(sym==orsym)           // 短路计算，or前为1则不计算右边的term
+        {
+            gen(opr,0,16);       // 取反，如果是1则会变为0
+            exitlist[elx]=cx;    // 将jpc的位置记录进exitlist
+            elx++;               // 可能会有多个or
+            gen(jpc,0,0);        // 为0则跳转，地址先空着
+            gen(opr,0,16);       // 若没跳则要把前面取反的改回来，以免影响正常运算
+                                 // 其实这已经确定了原本计算结果是0了
+                                 // 也可以用lit(0,0);
+        }
+
+        getsym();
         term(fsys|simpexpbegsys);
 
         switch(addop)
@@ -481,17 +496,39 @@ void simpexpression(unsigned long long fsys)
                 break;
         }
     }
+
+    if (elx>elx1)                // 语句中存在or短路跳转
+    {
+        gen(jmp,0,cx+2);         // 若是正常执行则跳过下一句指令
+        while(elx>elx1)          // 补上之前的jpc地址
+        {
+            elx--;
+            code[exitlist[elx]].a=cx;
+        }
+        gen(lit,0,1);            // 短路跳转则把结果强制置为1
+    }
 }
 
 void term(unsigned long long fsys)
 {
     unsigned long long mulop;
+    long elx1;
 
     factor(fsys|termbegsys);
+
+    elx1=elx;                    // 记录下当前层开始的elx
 
     while(sym & termbegsys)
     {
         mulop = sym;
+
+        if (sym==andsym)         // 短路计算，and前为0则不计算右边的factor
+        {
+            exitlist[elx]=cx;    // 将jpc的位置记录进exitlist
+            elx++;               // 可能会有多个or
+            gen(jpc,0,0);        // 为0则跳转，地址先空着
+        }
+
         getsym();
 
         factor(fsys|termbegsys);
@@ -514,6 +551,17 @@ void term(unsigned long long fsys)
                 gen(opr,0,20);
                 break;
         }
+    }
+
+    if (elx>elx1)                // 语句中存在and短路跳转
+    {
+        gen(jmp,0,cx+2);         // 若是正常执行则跳过下一句指令
+        while(elx>elx1)          // 补上之前的jpc地址
+        {
+            elx--;
+            code[exitlist[elx]].a=cx;
+        }
+        gen(lit,0,0);            // 短路跳转把结果强制置为0
     }
 }
 

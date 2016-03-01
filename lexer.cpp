@@ -175,9 +175,8 @@ void getsym()
 
         if (ch == '/')
         {
-            long l1=ll;
+            while (cc < ll) getch();
             getch();
-            while (l1==ll) getch();
 
             getsym();
         } else if (ch == '*')
